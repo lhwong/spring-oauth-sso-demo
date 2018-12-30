@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
-@Profile("secret")
+//@Profile("secret")
 @EnableOAuth2Sso // Has to be present on this component for it to meet it's SpringBoot conditions
 @Component
 public class SocialWebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapter {
