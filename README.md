@@ -55,13 +55,19 @@ cf push -f build/sample-manifests/uaa-cf-application.yml
 
 The vanilla UAA contains some demo app registrations and some users already, but I like to add one of my own. The UAA has no user interface (unlike the PCF marketplace's `single-sign-on` service) so instead I'm using the uaa's own [command line client](https://github.com/cloudfoundry/cf-uaac) called `uaac`. To do this, issue the following commands to...
 
-1. Install the Ruby gem for the `uaac` client
+1. Install Ruby (Ruby+Devkit 2.5.X at https://rubyinstaller.org/downloads/) and the Ruby gem for the `uaac` client
 2. Target your UAA server with your `uaac` client
 3. Get the client token for the UAA Administrator
 
+https://github.com/cloudfoundry/cf-uaac/issues/45
+https://github.com/oneclick/rubyinstaller2/issues/96
+
 ```bash
 gem install cf-uaac
-uaac target https://bw-sso-server.cfapps.io
+gem install eventmachine --platform ruby
+gem uninstall eventmachine
+gem install eventmachine --platform ruby
+uaac target http://localhost:8080/uaa
 uaac token client get admin -s adminsecret
 ```
 
@@ -79,7 +85,7 @@ authorized grant types (list):  client_credentials authorization_code refresh_to
 authorities (list):  clients.read emails.write scim.userids password.write idps.write notifications.write oauth.login scim.write critical_notifications.write
 access token validity (seconds):  3600
 refresh token validity (seconds):  3600
-redirect uri (list):  http://localhost:8080/login/uaa http://localhost:8080
+redirect uri (list):  http://localhost:8081/login/uaa http://localhost:8081
 autoapprove (list):  openid
 signup redirect url (url):
 ```
