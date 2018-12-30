@@ -1,3 +1,6 @@
+server:
+  port: 8081
+  
 spring:
   application:
     name: spring-oauth-sso-demo
@@ -38,11 +41,11 @@ google:
 
 uaa:
   client:
-    clientId: <your-id-here>
-    clientSecret: <your-secret-here>
-    checkTokenUrl: http://bw-uaa-server.cfapps.io/check_token
-    accessTokenUri: http://bw-uaa-server.cfapps.io/oauth/token
-    approvalsUri: http://bw-uaa-server.cfapps.io/approvals
-    userAuthorizationUri: http://bw-uaa-server.cfapps.io/oauth/authorize
+    clientId: spring-oauth-sso-demo
+    clientSecret: secret
+    checkTokenUrl: http://localhost:8080/uaa/check_token
+    accessTokenUri: http://localhost:8080/uaa/oauth/token
+    approvalsUri: http://localhost:8080/uaa/approvals
+    userAuthorizationUri: http://localhost:8080/uaa/oauth/authorize
   resource:
-    userInfoUri: http://bw-uaa-server.cfapps.io/userinfo
+    userInfoUri: http://localhost:8080/uaa/userinfo
