@@ -50,6 +50,14 @@ cd uaa
 ./gradlew clean assemble manifests -Dapp=<your-preferred-app-name-for-the-uaa> -Dapp-domain=cfapps.io # I'm pushing to Pivotal Web Services, which uses this domain.
 cf push -f build/sample-manifests/uaa-cf-application.yml
 ```
+Run locally
+```bash
+$ git clone git://github.com/cloudfoundry/uaa.git
+$ cd uaa
+$ ./gradlew run
+```
+
+https://github.com/cloudfoundry/uaa/issues/911
 
 ### Step 2: Get the UAA command line client (UAAC)
 
