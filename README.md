@@ -141,3 +141,10 @@ You should see a 'Login' screen (offering a choice of providers depending on whi
 Proceed to login. You should be directed to the login screen for the appropriate provider (Github, Google or CloudFoundry depending on the branch you checked out). You may be asked to allow the demo application to access your profile (choose to allow if you want to continue). 
 
 Once you have logged in (using two-factor authentication if you have that enabled on your account) you will be redirected back to the app and the "Logout" button and the name you registered with the provider should be displayed in the browser window.
+
+
+External authentication provider, oauth2-vanilla-authserver, Authorization Server tut-spring-boot-oauth2/auth-server/ and ClientApplication of tut-spring-boot-oauth2/auth-server/src/test
+
+tut-spring-boot-oauth2/auth-server/ - turns the app into a fully-fledged OAuth2 Authorization Server, able to issue its own tokens, but still using the external OAuth2 providers for authentication.
+upgrade spring boot to 2.0.1.RELEASE
+
