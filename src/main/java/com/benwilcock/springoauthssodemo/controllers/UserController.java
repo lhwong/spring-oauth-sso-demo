@@ -31,7 +31,8 @@ public class UserController {
      * @return
      */
 
-    @GetMapping("/user")
+    //@GetMapping("/user")
+    @GetMapping({ "/user", "/me" })
     public Principal user(Principal principal) throws JsonProcessingException {
         LOGGER.info("Returning the Principal: '{}'", principal.getName());
 

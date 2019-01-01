@@ -4,12 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -28,6 +37,8 @@ import java.util.List;
  * configuration which you don't see in the regular Auto Configuration in SoringBoot.
  */
 @EnableOAuth2Client
+@EnableAuthorizationServer
+@Order(200)
 @Component
 public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapter {
 
@@ -37,20 +48,24 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
     private OAuthClientConfigurationProperties github;
     private OAuthClientConfigurationProperties google;
     private OAuthClientConfigurationProperties uaa;
+    private OAuthClientConfigurationProperties oauthVanilla;
 
     public WebSecurityConfigurerAdapterImpl(OAuth2ClientContext oAuth2ClientContext,
                                             @Qualifier("github") OAuthClientConfigurationProperties github,
                                             @Qualifier("google") OAuthClientConfigurationProperties google,
-                                            @Qualifier("uaa") OAuthClientConfigurationProperties uaa
+                                            @Qualifier("uaa") OAuthClientConfigurationProperties uaa,
+                                            @Qualifier("oauth2-vanilla") OAuthClientConfigurationProperties oauthVanilla
                                             ) {
 
         this.oAuth2ClientContext = oAuth2ClientContext;
         this.github = github;
         this.google = google;
         this.uaa = uaa;
+        this.oauthVanilla =  oauthVanilla;
         this.logTheConfig("Github", github);
         this.logTheConfig("Google", google);
         this.logTheConfig("CloudFoundry Uaa", uaa);
+        this.logTheConfig("OAuth2 Vanilla", oauthVanilla);
     }
 
     @Override
@@ -97,6 +112,7 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
         String googlePath = "/login/google";
         String githubPath = "/login/github";
         String uaaPath = "/login/uaa";
+        String oauth2VanillaPath = "/login/oauth2-vanilla";
 
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
@@ -107,7 +123,9 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
         filters.add(ssoFilter(github, githubPath));
         LOGGER.info("Creating the Servlet Filter for CloudFoundry Uaa on {}...", uaaPath);
         filters.add(ssoFilter(uaa, uaaPath));
-
+        LOGGER.info("Creating the Servlet Filter for oauth2-vanilla on {}...", oauth2VanillaPath);
+        filters.add(ssoFilter(oauthVanilla, oauth2VanillaPath));
+        
         filter.setFilters(filters);
         return filter;
     }
@@ -139,4 +157,24 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
         LOGGER.debug("Client authentication scheme: {}", client.getClient().getClientAuthenticationScheme());
         LOGGER.debug("Grant type: {}", client.getClient().getGrantType());
     }
+    
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+    
+    @Configuration
+	@EnableResourceServer
+	protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+		@Override
+		public void configure(HttpSecurity http) throws Exception {
+			// @formatter:off
+			http.antMatcher("/me").authorizeRequests().anyRequest().authenticated();
+			// @formatter:on
+		}
+	}
+    
+    
+    
 }

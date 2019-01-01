@@ -14,11 +14,20 @@ logging:
   level:
     org.springframework.security: DEBUG
     com.benwilcock: DEBUG
+  file: c:/var/spring-oauth-sso-demo.log
 
+security:
+  oauth2:
+    client:
+      client-id: acme
+      client-secret: acmesecret
+      scope: read,write
+      auto-approve-scopes: '.*'
+    
 github:
   client:
-    clientId: <your-id-here>
-    clientSecret: <your-secret-here>
+    clientId: a19290d4de4dd9b0138f
+    clientSecret: 191ab8b51e811d427a5a25ff55aa95432812f89b
     accessTokenUri: https://github.com/login/oauth/access_token
     userAuthorizationUri: https://github.com/login/oauth/authorize
     clientAuthenticationScheme: form
@@ -49,3 +58,12 @@ uaa:
     userAuthorizationUri: http://localhost:8080/uaa/oauth/authorize
   resource:
     userInfoUri: http://localhost:8080/uaa/userinfo
+    
+oauth2-vanilla:
+  client:
+    accessTokenUri: http://localhost:9999/uaa/oauth/token
+    userAuthorizationUri: http://localhost:9999/uaa/oauth/authorize
+    clientId: acme
+    clientSecret: acmesecret
+  resource:
+    userInfoUri: http://localhost:9999/uaa/user    
