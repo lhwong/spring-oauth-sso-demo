@@ -61,9 +61,9 @@ uaa:
     
 oauth2-vanilla:
   client:
-    accessTokenUri: http://localhost:9999/uaa/oauth/token
-    userAuthorizationUri: http://localhost:9999/uaa/oauth/authorize
+    accessTokenUri: http://localhost:9991/uaa/oauth/token
+    userAuthorizationUri: http://localhost:9991/uaa/oauth/authorize
     clientId: acme
     clientSecret: acmesecret
   resource:
-    userInfoUri: http://localhost:9999/uaa/user    
+    userInfoUri: http://localhost:9991/uaa/user    
